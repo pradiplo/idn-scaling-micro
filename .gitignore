@@ -1,0 +1,4 @@
+.DS_Store
+raws/*
+temps/*
+__pycache__/*
