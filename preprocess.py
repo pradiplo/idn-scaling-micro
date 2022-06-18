@@ -7,6 +7,8 @@ import rioxarray
 import xarray
 import shapely
 from shapely.geometry import shape as shaping
+import utils
+
 
 class preProcess:
 
@@ -90,11 +92,12 @@ class preProcess:
 
         return [gdpDict,totGdpDict]
 
-    def obtainCountryBoundary():
-        country ="./raws/gadm36_IDN_shp/gadm36_IDN_1.shp"
-        negara = gpd.read_file(country)
+    def obtainCountryBoundary(country, level):
+        #country ="./raws/gadm36_IDN_shp/gadm36_IDN_1.shp"
+        #negara = gpd.read_file(country)
+        negara=utils.get_adm_country(country, level)
         negara["titik_time"]=negara.centroid
-        negara["titik_time"]=negara["titik_time"].apply(lambda x: time_zoning(x))
+        negara["titik_time"]=negara["titik_time"].apply(lambda x: utils.time_zoning(x))
         negara["titik_time"] = negara["titik_time"].astype(str).str.replace("Asia/Pontianak","Asia/Jakarta")
-        negara=negara.to_crs("EPSG:3857")
+        negara=negara.to_crs("EPSG:4326")
         return negara
