@@ -2,3 +2,9 @@
 raws/*
 temps/*
 __pycache__/*
+.ipynb_checkpoints/processing-checkpoint.ipynb
+.ipynb_checkpoints/processing-Copy1-checkpoint.ipynb
+.ipynb_checkpoints/preprocess-checkpoint.ipynb
+examples/.ipynb_checkpoints/preprocess-checkpoint.ipynb
+examples/.ipynb_checkpoints/preprocess-checkpoint.pynb
+processing.ipynb
