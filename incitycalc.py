@@ -1,8 +1,14 @@
 from preprocess import preProcess
 import numpy as np
 from pysal.explore import inequality
+from pysal.lib import cg
+import warnings
+warnings.filterwarnings('ignore')
 
 class inCityCalc:
+    def getXY(pt):
+        return (pt.x, pt.y)
+
     def calc_loubar_threshold(gdf):
         lourank = int(len(gdf)*(1 - gdf["raster_val"].mean()/max(gdf["raster_val"])))
         gdf_rank = gdf.sort_values(by=["raster_val"],ascending=True).reset_index(drop=True)
@@ -19,8 +25,13 @@ class inCityCalc:
         return [gdfhot,gdfcold,areahot,areacold]
 
     def calc_eta(gdf,thres):
+        centroidseries = gdf["geometry"].centroid
+        x, y = [list(t) for t in zip(*map(inCityCalc.getXY,centroidseries))]
+        matpos = np.array([x,y]).transpose()
+        d = cg.distance_matrix(matpos)
+        eucl = np.maximum(d, d.transpose())
         gdf_dict = gdf["raster_val"].to_dict()
-        s = [(k, gdf[k]) for k in sorted(gdf_dict, key=gdf_dict.get)]
+        s = [(k, gdf_dict[k]) for k in sorted(gdf_dict, key=gdf_dict.get)]
         keys = []
         vals = []
         for k,v in s:
@@ -28,7 +39,7 @@ class inCityCalc:
             vals.append(v)
         vals = np.array(vals)
         keys = np.array(keys)
-        loubar_keys = keys[vals>=threshold]
+        loubar_keys = keys[vals>=thres]
         dist_mat =  eucl[keys.reshape(-1,1), keys]
         dist_corr = dist_mat[dist_mat>0]
         loubar_dist_mat = eucl[loubar_keys.reshape(-1,1), loubar_keys]

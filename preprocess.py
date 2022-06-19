@@ -8,6 +8,8 @@ import xarray
 import shapely
 from shapely.geometry import shape as shaping
 import utils
+import warnings
+warnings.filterwarnings('ignore')
 
 
 class preProcess:

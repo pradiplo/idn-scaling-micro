@@ -13,6 +13,8 @@ import fiona
 import datetime
 import pytz
 from timezonefinder import TimezoneFinder
+import warnings
+warnings.filterwarnings('ignore')
 #country="IDN"
 def get_adm_country(country, level_layer_name):
     #country == county code in gdam
@@ -33,7 +35,7 @@ def get_adm_country(country, level_layer_name):
                 key=href.split(".")[0].split("_")[1]
                 value=gdam_base+href
                 hrefs[key]=value
-    
+
         path=hrefs[country]
         levels=[layername for layername in fiona.listlayers(path)]
         if level_layer_name not in levels:
